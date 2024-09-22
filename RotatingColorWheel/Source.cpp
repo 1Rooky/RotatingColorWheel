@@ -47,7 +47,6 @@ DrawingMode Current_DrawingMode = DrawingMode::FilledTriangle;
 GLuint modelMatLoc, viewMatLoc, projMatLoc;
 
 vector<vertex> GetAllVertices() {
-
 	vector<vertex> TriangleVertices(noOfSegments * 3 + 3);
 	float angle = radians((360 / float(noOfSegments)));
 
@@ -55,16 +54,15 @@ vector<vertex> GetAllVertices() {
 	float colorRatio = 0;
 	float colorOffset = 3 / float(noOfSegments);
 	colorRatio += colorOffset; // because I don't want to start from black
-	
+
 	TriangleVertices[0] = { vec3(0,0,0),vec3(1,1,1) };
-	TriangleVertices[1].position = vec3(0,1,0);
+	TriangleVertices[1].position = vec3(0, 1, 0);
 	colorRatio += colorOffset;
 	green = true;
-	
-	for (int i = 2; i < (noOfSegments*3);) {
 
+	for (int i = 2; i < (noOfSegments * 3);) {
 		if (green) {
-			TriangleVertices[i].color = vec3(0,colorRatio, 1 - colorRatio);
+			TriangleVertices[i].color = vec3(0, colorRatio, 1 - colorRatio);
 			if (colorRatio >= 1 + colorOffset) {
 				red = true;
 				green = false;
@@ -75,7 +73,7 @@ vector<vertex> GetAllVertices() {
 		else if (red)
 		{
 			TriangleVertices[i].color = vec3(colorRatio, 1 - colorRatio, 0);
-		
+
 			if (colorRatio >= 1) {
 				red = false;
 				blue = true;
@@ -97,37 +95,33 @@ vector<vertex> GetAllVertices() {
 			vec3((TriangleVertices[i - 1].position[0] * cos(angle)) + (-1 * TriangleVertices[i - 1].position[1] * sin(angle)), //x
 				(1 * TriangleVertices[i - 1].position[0] * sin(angle)) + (1 * TriangleVertices[i - 1].position[1] * cos(angle)), //y
 				0); // z
-		TriangleVertices[i++] = {vec3(0,0,0),vec3(1,1,1)}; // center Point
+		TriangleVertices[i++] = { vec3(0,0,0),vec3(1,1,1) }; // center Point
 		TriangleVertices[i++] = { TriangleVertices[i - 2].position,TriangleVertices[i - 2].color };
 	}
 	TriangleVertices[1].color = TriangleVertices[TriangleVertices.size() - 2].color;
 	return TriangleVertices;
 }
 
-
 void CreateColorWheel()
 {
-	    vector<vertex> colorWheel = GetAllVertices();
-
-		glGenBuffers(1, &VBO_Triangle);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_Triangle);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * colorWheel.size(), colorWheel.data(), GL_DYNAMIC_DRAW);
-
-		// shader
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * sizeof(GL_FLOAT), 0);
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * sizeof(GL_FLOAT), (char*)(3 * sizeof(GL_FLOAT)));
-		glEnableVertexAttribArray(1);
-
-}
-
-void updateBuffer() {
-
 	vector<vertex> colorWheel = GetAllVertices();
+
+	glGenBuffers(1, &VBO_Triangle);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_Triangle);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * colorWheel.size(), colorWheel.data(), GL_DYNAMIC_DRAW);
 
+	// shader
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * sizeof(GL_FLOAT), 0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * sizeof(GL_FLOAT), (char*)(3 * sizeof(GL_FLOAT)));
+	glEnableVertexAttribArray(1);
+}
+
+void updateBuffer() {
+	vector<vertex> colorWheel = GetAllVertices();
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_Triangle);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * colorWheel.size(), colorWheel.data(), GL_DYNAMIC_DRAW);
 }
 
 void CompileShader(const char* vertex_shader_file_name, const char* fragment_shader_file_namering, GLuint& programId)
@@ -203,11 +197,11 @@ void Render()
 	}
 
 	// draw triangle
-		mat4 ModelMat = glm::rotate(theta * 180 / PI, glm::vec3(0, 0, 1)) *
+	mat4 ModelMat = glm::rotate(theta * 180 / PI, glm::vec3(0, 0, 1)) *
 		glm::scale(glm::vec3(0.5f, 0.5f, 0.5f));
-	    glUniformMatrix4fv(modelMatLoc, 1, GL_FALSE, glm::value_ptr(ModelMat));
+	glUniformMatrix4fv(modelMatLoc, 1, GL_FALSE, glm::value_ptr(ModelMat));
 
-	glDrawArrays(GL_TRIANGLES, 0, noOfSegments *3 );
+	glDrawArrays(GL_TRIANGLES, 0, noOfSegments * 3);
 }
 
 int main()
@@ -255,7 +249,6 @@ int main()
 						noOfSegments--;
 						updateBuffer();
 					}
-
 				}
 				break;
 			}
@@ -264,7 +257,7 @@ int main()
 
 		Update();
 		Render();
-		
+
 		window.display();
 	}
 
