@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Extra files
+OpenGLSFML/
+RotatingColorWheel.sln
+OpenGLSFMLTemplate.vcxproj
+OpenGLSFMLTemplate.vcxproj.filters
+CppProperties.json
